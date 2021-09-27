@@ -13,13 +13,19 @@ app.use(bodyParder.json())
 
 app.use((requisicao, resposta, proximo) => {
     let formatoRequisitado = requisicao.header('Accept')
+    
+    if(formatoRequisitado === '*/*'){
+        formatoRequisitado = 'application/json'
+    }
 
     if (formatosAceitos.indexOf(formatoRequisitado) === -1) {
         resposta.status(406)
-        resposta.end()
+       resposta.end()
+       return 
     }
 
     resposta.setHeader('Content-Type', formatoRequisitado)
+    proximo();
 })
 
 app.use('/api/fornecedores',roteador)
